@@ -1,4 +1,5 @@
 import logging
+import requests
 from queue import Queue
 from threading import Thread
 from urllib.request import Request, urlopen
