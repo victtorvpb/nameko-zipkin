@@ -16,7 +16,7 @@ class Zipkin(DependencyProvider):
         self.spans = {}
 
     def setup(self):
-        monkey_patch(self.transport.handle)
+        monkey_patch(self.transport) #@TODO modify to custom transport
 
     def get_dependency(self, worker_ctx):
         zipkin_attrs = _read_zipkin_attrs(worker_ctx)
