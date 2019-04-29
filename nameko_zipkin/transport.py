@@ -5,7 +5,7 @@ from urllib.request import Request, urlopen
 from abc import abstractmethod, ABCMeta
 
 from nameko.extensions import SharedExtension
-
+from py_zipkin.transport import BaseTransportHandler
 from nameko_zipkin.constants import *
 
 logger = logging.getLogger('nameko-zipkin')
