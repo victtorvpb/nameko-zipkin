@@ -13,7 +13,7 @@ setup(
     description='Zipkin tracing for nameko framework',
     packages=['nameko_zipkin'],
     install_requires=[
-        'py_zipkin>=0.7.1',
-        'nameko>=2.6.0',
+        'py_zipkin>=0.18.2',
+        'nameko>=2.12.0',
     ],
 )
