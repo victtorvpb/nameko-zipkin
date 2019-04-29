@@ -34,7 +34,7 @@ class Zipkin(DependencyProvider):
     def worker_setup(self, worker_ctx):
         span = self.spans.get(worker_ctx.call_id)
         if span:
-            worker_ctx.data[PARENT_SPAN_ID_HEADER] = span.zipkin_attrs.span_id
+            worker_ctx.data[PARENT_SPAN_ID_HEADER] = span.zipkin_attrs_override.span_id
             start_span(span)
 
     def worker_teardown(self, worker_ctx):
