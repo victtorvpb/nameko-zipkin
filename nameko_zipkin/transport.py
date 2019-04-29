@@ -71,7 +71,7 @@ class Transport(SharedExtension):
 
     def handle(self, encoded_span):
         self._handler.handle(encoded_span)
-
+#@TODO create custom transport
 class HttpTransport(BaseTransportHandler):
 
     def get_max_payload_bytes(self):
