@@ -3,21 +3,19 @@ from py_zipkin import zipkin
 from py_zipkin.util import generate_random_64bit_string
 
 from nameko_zipkin.constants import *
-from nameko_zipkin.transport import Transport, HttpTransport
+from nameko_zipkin.transport import Transport
 from nameko_zipkin.method_proxy import monkey_patch
 from nameko_zipkin.utils import start_span, stop_span
 
 
 class Zipkin(DependencyProvider):
-    #@TODO create custom transport
-    transport = HttpTransport()
+    transport = Transport()
 
     def __init__(self):
         self.spans = {}
 
     def setup(self):
-        monkey_patch(self.transport) #@TODO modify to custom transport
-
+        monkey_patch(self.transport.handle) 
     def get_dependency(self, worker_ctx):
         zipkin_attrs = _read_zipkin_attrs(worker_ctx)
 
@@ -28,7 +26,7 @@ class Zipkin(DependencyProvider):
         span = zipkin.zipkin_server_span(worker_ctx.service_name,
                                          worker_ctx.entrypoint.method_name,
                                          zipkin_attrs=zipkin_attrs,
-                                         transport_handler=self.transport) #@TODO modify to custom transport
+                                         transport_handler=self.transport.handle) 
         self.spans[worker_ctx.call_id] = span
         return span
 

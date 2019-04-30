@@ -72,17 +72,37 @@ class Transport(SharedExtension):
 
     def handle(self, encoded_span):
         self._handler.handle(encoded_span)
-#@TODO create custom transport
-class HttpTransport(BaseTransportHandler):
 
-    def get_max_payload_bytes(self):
-        return None
+class HttpTransport(IHandler):
+    def __init__(self, url):
+        self.url = url
+        self.queue = Queue()
+        self.thread = None
 
-    def send(self, encoded_span):
-        # The collector expects a thrift-encoded list of spans.
+    def start(self):
+        self.thread = Thread(target=self._poll)
+        self.thread.start()
+
+    def stop(self):
+        self.queue.put(StopIteration)
+        self.thread.join()
+
+    def handle(self, encoded_span):
+        
+        encoded_span =  encoded_span
+        
         response = requests.post(
-            'http://localhost:9411/api/v1/spans',
+            self.url,
             data=encoded_span,
             headers={'Content-Type': 'application/x-thrift'},
         )
+        # import pdb; pdb.set_trace()
         return response
+
+
+    def _poll(self):
+        while True:
+            span = self.queue.get()
+            if span == StopIteration:
+                break
+            self.handle(span)
