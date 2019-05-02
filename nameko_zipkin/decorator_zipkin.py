@@ -16,7 +16,7 @@ def decorator_http_transport(url, span_name):
     """
 
     def decorator_zipkin(func):
-        def wrap(*args, **kwargs):
+        def wrapper(*args, **kwargs):
             try:
                 service_name = args[0].name
             except AttributeError:
@@ -35,6 +35,6 @@ def decorator_http_transport(url, span_name):
             else:
                 return func(*args, **kwargs)
 
-        return wrap
+        return wrapper
 
     return decorator_zipkin
