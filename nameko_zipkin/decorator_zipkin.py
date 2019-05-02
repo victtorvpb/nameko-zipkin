@@ -31,9 +31,9 @@ def decorator_http_transport(url, span_name):
                     sample_rate=100.0,
                     transport_handler=handler,
                 ):
-                    func(*args, **kwargs)
+                    return func(*args, **kwargs)
             else:
-                func(*args, **kwargs)
+                return func(*args, **kwargs)
 
         return wrap
 
