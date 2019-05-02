@@ -18,7 +18,7 @@ def decorator_http_transport(url, span_name):
     def decorator_zipkin(func):
         def wrap(*args, **kwargs):
             try:
-                service_name = args[0].nameko_zipkin
+                service_name = args[0].name
             except AttributeError:
                 service_name = "unknown"
 
