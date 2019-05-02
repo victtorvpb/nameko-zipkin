@@ -3,19 +3,38 @@ from nameko_zipkin import monkey_patch
 from py_zipkin import zipkin
 
 
-def decorator_http_transport(url, service_name, span_name):
+def decorator_http_transport(url, span_name):
+    """
+    [summary]
+    Decorator to implement the zipkin nameko in service RPC
+    :param url: Url to Zipkin Service
+    :type url: String
+    :param span_name: Span Name
+    :type span_name: String
+    :return:
+    :rtype: None
+    """
+
     def decorator_zipkin(func):
-        def wrap(*original_args, **original_kwargs):
-            if not original_args[0].zipkin_nameko:
+        def wrap(*args, **kwargs):
+            try:
+                service_name = args[0].nameko_zipkin
+            except AttributeError:
+                service_name = "unknown"
+
+            if hasattr(args[0], "zipkin_nameko") and not args[0].zipkin_nameko:
                 handler = HttpTransport(url).handle
                 monkey_patch(handler)
-                with zipkin.zipkin_server_span(service_name,
-                                            span_name,
-                                            sample_rate=100.,
-                                            transport_handler=handler):
-                    func(*original_args, **original_kwargs)
+                with zipkin.zipkin_server_span(
+                    service_name,
+                    span_name,
+                    sample_rate=100.0,
+                    transport_handler=handler,
+                ):
+                    func(*args, **kwargs)
             else:
-                func(*original_args, **original_kwargs)
+                func(*args, **kwargs)
+
         return wrap
 
     return decorator_zipkin
