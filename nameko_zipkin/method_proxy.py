@@ -13,7 +13,9 @@ class TracedRpcReply(RpcReply):
         try:
             return super().result()
         finally:
-            stop_span(self.zipkin_span)
+            #REMOVE TO CLIENT SPAN
+            pass
+            # stop_span(self.zipkin_span)
 
 
 def monkey_patch(transport_handler):
