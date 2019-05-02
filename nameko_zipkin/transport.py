@@ -9,7 +9,7 @@ from nameko.extensions import SharedExtension
 from py_zipkin.transport import BaseTransportHandler
 from nameko_zipkin.constants import *
 
-logger = logging.getLogger('nameko-zipkin')
+logger = logging.getLogger("nameko-zipkin")
 
 
 class IHandler(metaclass=ABCMeta):
@@ -39,12 +39,14 @@ class HttpHandler(IHandler):
         self.thread.join()
 
     def handle(self, encoded_span):
-        body = b'\x0c\x00\x00\x00\x01' + encoded_span
-        request = Request(self.url, body, {'Content-Type': 'application/x-thrift'}, method='POST')
+        body = b"\x0c\x00\x00\x00\x01" + encoded_span
+        request = Request(
+            self.url, body, {"Content-Type": "application/x-thrift"}, method="POST"
+        )
         try:
             urlopen(request)
         except:
-            logger.error('Exception handling span', exc_info=True)
+            logger.error("Exception handling span", exc_info=True)
 
     def _poll(self):
         while True:
@@ -73,6 +75,7 @@ class Transport(SharedExtension):
     def handle(self, encoded_span):
         self._handler.handle(encoded_span)
 
+
 class HttpTransport(IHandler):
     def __init__(self, url):
         self.url = url
@@ -88,17 +91,16 @@ class HttpTransport(IHandler):
         self.thread.join()
 
     def handle(self, encoded_span):
-        
-        encoded_span =  encoded_span
-        
+
+        encoded_span = encoded_span
+
         response = requests.post(
             self.url,
             data=encoded_span,
-            headers={'Content-Type': 'application/x-thrift'},
+            headers={"Content-Type": "application/x-thrift"},
         )
         # import pdb; pdb.set_trace()
         return response
-
 
     def _poll(self):
         while True:

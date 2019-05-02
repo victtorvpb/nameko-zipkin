@@ -13,7 +13,7 @@ class TracedRpcReply(RpcReply):
         try:
             return super().result()
         finally:
-            #REMOVE TO CLIENT SPAN
+            # REMOVE TO CLIENT SPAN
             pass
             # stop_span(self.zipkin_span)
 
@@ -22,9 +22,9 @@ def monkey_patch(transport_handler):
     _call = MethodProxy._call
 
     def _call_traced(self: MethodProxy, *args, **kwargs):
-        span = zipkin.zipkin_client_span(self.service_name,
-                                         self.method_name,
-                                         transport_handler=transport_handler)
+        span = zipkin.zipkin_client_span(
+            self.service_name, self.method_name, transport_handler=transport_handler
+        )
         start_span(span)
         self.worker_ctx.data.update(zipkin.create_http_headers_for_new_span())
         try:
