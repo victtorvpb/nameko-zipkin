@@ -3,7 +3,7 @@ from nameko_zipkin import monkey_patch
 from py_zipkin import zipkin
 
 
-def decorator_http_transport(url, span_name):
+def decorator_http_transport(url, span_name, debug=True):
     """
     [summary]
     Decorator to implement the zipkin nameko in service RPC
@@ -11,6 +11,8 @@ def decorator_http_transport(url, span_name):
     :type url: String
     :param span_name: Span Name
     :type span_name: String
+    :param span_name: Flag to execute or no the zipkin
+    :type span_name: Debug
     :return:
     :rtype: None
     """
@@ -22,6 +24,8 @@ def decorator_http_transport(url, span_name):
             except AttributeError:
                 service_name = "unknown"
 
+            if not debug:
+                return func(*args, **kwargs) 
             if hasattr(args[0], "zipkin_nameko") and not args[0].zipkin_nameko:
                 handler = HttpTransport(url).handle
                 monkey_patch(handler)
