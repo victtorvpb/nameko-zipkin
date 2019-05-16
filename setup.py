@@ -12,5 +12,5 @@ setup(
     url="https://github.com/fraglab/nameko-zipkin",
     description="Zipkin tracing for nameko framework",
     packages=["nameko_zipkin"],
-    install_requires=["py_zipkin>=0.18.2", "nameko>=2.12.0"],
+    install_requires=["py_zipkin>=0.18.2", "nameko>==2.5.4"],
 )
